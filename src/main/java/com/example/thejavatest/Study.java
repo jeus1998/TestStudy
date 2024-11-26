@@ -1,7 +1,19 @@
 package com.example.thejavatest;
 
+
 public class Study {
-    public static void main(String[] args) {
-        System.out.println("psvm test");
+    private StudyStatus status;
+    private int limit;
+
+    public Study() {
+    }
+    public Study(int limit) {
+        if(limit <= 0) throw new IllegalArgumentException("limit 0보다 커야 한다.");
+    }
+    public StudyStatus getStatus() {
+        return status;
+    }
+    public int getLimit() {
+        return limit;
     }
 }
