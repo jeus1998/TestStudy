@@ -6,6 +6,7 @@ import com.example.thejavatest.domain.StudyStatus;
 import com.example.thejavatest.member.MemberService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -53,5 +54,33 @@ class StudyServiceTest {
         Study createStudy = studyService.createNewStudy(1L, study);
 
         assertEquals(member.getId(), createStudy.getOwnerId());
+    }
+    @Test
+    void notifyTest(@Mock MemberService memberService, @Mock StudyRepository studyRepository){
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("baejeu@naver.com");
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+
+        Study study = new Study(100, "자바 스터디");
+        when(studyRepository.save(study)).thenReturn(study);
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        studyService.createNewStudy(1L, study);
+
+        // notify 호출 검증
+        verify(memberService, times(1)).notify(study);
+
+        verifyNoMoreInteractions(memberService);
+
+        /*
+        // validate 호출 검증
+        verify(memberService, never()).validate(any());
+
+        // 순서 검증
+        InOrder inOrder = inOrder(memberService);
+        inOrder.verify(memberService).notify(study);
+        inOrder.verify(memberService).notify(member);
+        */
     }
 }
