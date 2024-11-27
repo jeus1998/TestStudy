@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudyServiceTest {
@@ -82,5 +83,26 @@ class StudyServiceTest {
         inOrder.verify(memberService).notify(study);
         inOrder.verify(memberService).notify(member);
         */
+    }
+    @Test
+    void bddTest(@Mock MemberService memberService, @Mock StudyRepository studyRepository){
+        // given
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("baejeu@naver.com");
+
+        given(memberService.findById(1L)).willReturn(Optional.of(member));
+
+        Study study = new Study(100, "자바 스터디");
+        given(studyRepository.save(study)).willReturn(study);
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        // when
+        studyService.createNewStudy(1L, study);
+
+        // then
+        then(memberService).should(times(1)).notify(study);
+        then(memberService).should(never()).validate(any());
+        then(memberService).shouldHaveNoMoreInteractions();
     }
 }
