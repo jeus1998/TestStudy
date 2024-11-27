@@ -1,10 +1,9 @@
 package com.example.thejavatest.repeat;
 
-import com.example.thejavatest.Study;
+import com.example.thejavatest.domain.Study;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -38,7 +37,7 @@ class RepeatTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
     void test(@ConvertWith(StudyConverter.class) Study study){
-        System.out.println(study.getLimit());
+        // System.out.println(study.getLimit());
     }
     static class StudyConverter extends SimpleArgumentConverter{
         @Override

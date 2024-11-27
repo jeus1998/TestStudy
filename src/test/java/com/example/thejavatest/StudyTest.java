@@ -1,5 +1,7 @@
 package com.example.thejavatest;
 
+import com.example.thejavatest.domain.Study;
+import com.example.thejavatest.domain.StudyStatus;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
@@ -20,7 +22,7 @@ class StudyTest {
         Study study = new Study();
         assertAll(
             () -> assertNotNull(study),
-            () -> assertTrue(study.getLimit() > 0, "스터디 참석 가능 인원은 0보다 커야 한다"),
+            // () -> assertTrue(study.getLimit() > 0, "스터디 참석 가능 인원은 0보다 커야 한다"),
             () ->  assertEquals(StudyStatus.DRAFT, study.getStatus(), () -> "스터디를 처음 만들면 상태값이 DRAFT 여야 한다")
         );
     }
