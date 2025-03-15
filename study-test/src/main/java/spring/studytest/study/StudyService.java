@@ -19,13 +19,14 @@ public class StudyService {
     }
 
     public Study createNewStudy(Long memberId, Study study){
-        Optional<Member> member = memberService.findById(memberId);
-        study.setOwnerId(member.orElseThrow(() ->
-                new IllegalArgumentException("Member doesn't exist for id: '" + memberId + "'")).getId());
-
+        Optional<Member> optionalMember = memberService.findById(memberId);
+        var member = optionalMember.orElseThrow(
+                () -> new IllegalArgumentException("Member doesn't exist for id: '" + memberId + "'")
+        );
+        study.setOwner(member);
         var newStudy = repository.save(study);
         memberService.notify(study);
-        memberService.notify(member.get());
+        memberService.notify(member);
         return newStudy;
     }
 
