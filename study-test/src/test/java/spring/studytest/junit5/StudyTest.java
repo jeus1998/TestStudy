@@ -1,8 +1,8 @@
 package spring.studytest.junit5;
 
 import org.junit.jupiter.api.*;
-import spring.studytest.Study;
-import spring.studytest.StudyStatus;
+import spring.studytest.domain.Study;
+import spring.studytest.domain.StudyStatus;
 
 import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;

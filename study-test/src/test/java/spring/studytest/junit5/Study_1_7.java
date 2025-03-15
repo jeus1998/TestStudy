@@ -3,7 +3,7 @@ package spring.studytest.junit5;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import spring.studytest.Study;
+import spring.studytest.domain.Study;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
