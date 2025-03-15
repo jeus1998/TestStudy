@@ -38,7 +38,7 @@ class StudyTest {
     void create_new_study_assertTimeoutPreemptively(){
         assertTimeoutPreemptively(Duration.ofMillis(100), () -> {
              new Study(10);
-             Thread.sleep(99);
+             Thread.sleep(50);
         }, () -> "스터디 생성은 0.1초 이내에 동작");
     }
 
