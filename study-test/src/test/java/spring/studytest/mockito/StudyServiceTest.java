@@ -14,10 +14,9 @@ import spring.studytest.study.StudyRepository;
 import spring.studytest.study.StudyService;
 
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,25 +29,23 @@ class StudyServiceTest {
     @Test
     @DisplayName("main test")
     void main(){
+        // given
         var member = new Member();
         member.setId(1L);
         member.setEmail("test@test.com");
 
         var study = new Study(10, "테스트");
+        given(memberService.findById(1L)).willReturn(Optional.of(member));
+        given(studyRepository.save(study)).willReturn(study);
 
-        when(memberService.findById(1L)).thenReturn(Optional.of(member));
-        when(studyRepository.save(any(Study.class)))
-                .thenReturn(study);
-
+        // when
         studyService.createNewStudy(1L, study);
 
-        InOrder inOrder = inOrder(memberService);
-        inOrder.verify(memberService).findById(any());
-        inOrder.verify(memberService).notify(any(Study.class));
-        inOrder.verify(memberService).notify(any(Member.class));
-        verifyNoMoreInteractions(memberService);
+        // then
+        then(memberService).should(times(1)).notify(member);
+        then(memberService).should(times(1)).notify(study);
+        then(memberService).shouldHaveNoMoreInteractions();
     }
-
 
     @Test
     @DisplayName("Mockito.mock")
