@@ -1,4 +1,4 @@
-package spring.studytest;
+package spring.studytest.junit5;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -13,6 +13,8 @@ import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.provider.*;
+import spring.studytest.Study;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

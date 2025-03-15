@@ -1,4 +1,4 @@
-package spring.studytest;
+package spring.studytest.junit5;
 
 import org.junit.jupiter.api.*;
 
