@@ -17,20 +17,20 @@ public class Study {
     private Long id;
     @Enumerated(EnumType.STRING)
     private StudyStatus status = StudyStatus.DRAFT;
-    private int limitCount;
+    private int limit;
     private String name;
     private LocalDateTime openedDateTime;
     private Long ownerId;
 
     public Study(int limit, String name) {
-        this.limitCount = limit;
+        this.limit = limit;
         this.name = name;
     }
     public Study(int limit) {
         if (limit < 0) {
             throw new IllegalArgumentException("limit 0보다 커야 한다.");
         }
-        this.limitCount = limit;
+        this.limit = limit;
     }
     public void open() {
         this.openedDateTime = LocalDateTime.now();
