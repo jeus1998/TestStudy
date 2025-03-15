@@ -22,7 +22,11 @@ public class StudyService {
         Optional<Member> member = memberService.findById(memberId);
         study.setOwnerId(member.orElseThrow(() ->
                 new IllegalArgumentException("Member doesn't exist for id: '" + memberId + "'")).getId());
-        return repository.save(study);
+
+        var newStudy = repository.save(study);
+        memberService.notify(study);
+        memberService.notify(member.get());
+        return newStudy;
     }
 
     public Study openStudy(Study study) {

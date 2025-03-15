@@ -3,6 +3,7 @@ package spring.studytest.mockito;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,8 +15,7 @@ import spring.studytest.study.StudyService;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -34,18 +34,19 @@ class StudyServiceTest {
         member.setId(1L);
         member.setEmail("test@test.com");
 
-        when(memberService.findById(any()))
-                .thenReturn(Optional.of(member))    // 1
-                .thenThrow(RuntimeException.class)  // 2
-                .thenReturn(Optional.empty());   // 3
+        var study = new Study(10, "테스트");
 
-        assertAll(
-                () -> assertThat(memberService.findById(1L)).isPresent(),
-                () -> assertThatThrownBy(() -> memberService.findById(1L))
-                        .isInstanceOf(RuntimeException.class),
-                () -> assertThat(memberService.findById(1L)).isEmpty(),
-                () -> assertThat(memberService.findById(1L)).isEmpty()
-        );
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(any(Study.class)))
+                .thenReturn(study);
+
+        studyService.createNewStudy(1L, study);
+
+        InOrder inOrder = inOrder(memberService);
+        inOrder.verify(memberService).findById(any());
+        inOrder.verify(memberService).notify(any(Study.class));
+        inOrder.verify(memberService).notify(any(Member.class));
+        verifyNoMoreInteractions(memberService);
     }
 
 
