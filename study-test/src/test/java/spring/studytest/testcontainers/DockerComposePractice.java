@@ -42,10 +42,13 @@ public class DockerComposePractice {
 
     @Container
     static DockerComposeContainer composeContainer =
-            new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"));
+            new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"))
+                    .withExposedService("study-db", 3306);
 
     @BeforeEach
     void setUp() {
+        var host = composeContainer.getServicePort("study-db", 3306);
+        System.out.println("host = " + host);
         var member = new Member();
         member.setEmail("me@email.com");
         memberRepository.save(member);
