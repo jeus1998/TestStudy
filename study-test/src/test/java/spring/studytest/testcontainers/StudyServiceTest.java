@@ -1,5 +1,6 @@
 package spring.studytest.testcontainers;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +21,6 @@ import spring.studytest.member.MemberService;
 import spring.studytest.study.MemberRepository;
 import spring.studytest.study.StudyRepository;
 import spring.studytest.study.StudyService;
-
-import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
@@ -38,34 +37,20 @@ public class StudyServiceTest {
 
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySQLContainer =
-            new MySQLContainer<>(DockerImageName.parse("mysql:latest"));
+    static MySQLContainer<?> mySQLContainer =
+            new MySQLContainer<>(DockerImageName.parse("mysql:latest"))
+                    .withDatabaseName("study_test");
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println(mySQLContainer.getJdbcUrl());
+    }
 
     @BeforeEach
     void setUp() {
         var member = new Member();
         member.setEmail("me@email.com");
         memberRepository.save(member);
-    }
-
-    @Test
-    void test1(){
-        List<Member> all = memberRepository.findAll();
-        System.out.println(all);
-        assertThat(all.size()).isEqualTo(1);
-        for (int i = 0; i < 100; i++) {
-            memberRepository.save(new Member());
-        }
-    }
-
-    @Test
-    void test2(){
-        List<Member> all = memberRepository.findAll();
-        System.out.println(all);
-        assertThat(all.size()).isEqualTo(1);
-        for (int i = 0; i < 100; i++) {
-            memberRepository.save(new Member());
-        }
     }
 
     @Test
@@ -85,6 +70,7 @@ public class StudyServiceTest {
         then(memberService).should(times(1)).findById(1L);
         then(memberService).should(times(1)).notify(any(Member.class));
         then(memberService).should(times(1)).notify(any(Study.class));
+        then(memberService).shouldHaveNoMoreInteractions();
 
         Optional<Study> findStudy = studyRepository.findById(study.getId());
         assertThat(findStudy.isPresent()).isTrue();
